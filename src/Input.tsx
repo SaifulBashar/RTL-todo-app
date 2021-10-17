@@ -4,11 +4,11 @@ export function Input({ setTodo }: { setTodo: (item: string) => void }) {
   const [text, setText] = useState("");
   return (
     <div>
-      <label htmlFor="username" className="hidden">
-        Username
+      <label htmlFor="todo_input" className="hidden">
+        Todo Input
       </label>
       <input
-        id="username"
+        id="todo_input"
         type="text"
         onChange={(e) => setText(e.target.value)}
         onKeyPress={(e) => {

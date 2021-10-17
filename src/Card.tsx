@@ -8,9 +8,12 @@ export function Card({
 }) {
   return (
     <div className="card hover:bg-gray-600 transition-all items-center flex ease-linear transform hover:scale-105">
-      <p className="whitespace-pre-wrap flex-1">{todo}</p>
+      <p className="whitespace-pre-wrap flex-1" data-testid="todo_content">
+        {todo}
+      </p>
       <div className="ml-4">
         <button
+          data-testid="todo_delete_button"
           onClick={() => (onDelete ? onDelete() : false)}
           className="hover:bg-gray-500 rounded-full p-2"
         >
