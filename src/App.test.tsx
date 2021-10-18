@@ -5,9 +5,14 @@ import userEvent from "@testing-library/user-event";
 describe("Test full todo", () => {
   const setup = () => {
     const utils = render(<App />);
-    const input = utils.getByLabelText("Todo Input");
+    const input = utils.getByLabelText("Todo Input") as HTMLInputElement;
+    const getTodolist = () =>
+      screen
+        .getAllByTestId("todo_list")
+        .map((item) => within(item).getByTestId("todo_content").textContent);
     return {
       input,
+      getTodolist,
       ...utils,
     };
   };
@@ -17,17 +22,14 @@ describe("Test full todo", () => {
     expect(input.value).toBe("23");
   });
   it("Add Todo item to the list", () => {
-    const { input } = setup();
+    const { input, getTodolist } = setup();
     const userInput = `fdsafwe vdsagvgsa`;
     userEvent.type(input, `${userInput}{enter}`);
-    const list = screen
-      .getAllByTestId("todo_list")
-      .map((item) => within(item).getByTestId("todo_content").textContent);
-    expect(list.findIndex((content) => content === userInput)).toBe(0);
+    expect(getTodolist().findIndex((content) => content === userInput)).toBe(0);
   });
 
   it("Remove todo item from the list", () => {
-    const { input } = setup();
+    const { input, getTodolist } = setup();
     const userInput = [`fdsafwe vdsagvgsa`, "abc", "yuijeiojo"];
     const todoValueWantToDelete = "abc";
     for (const item of userInput) {
@@ -40,14 +42,12 @@ describe("Test full todo", () => {
       ) {
         return within(item).getByTestId("todo_delete_button");
       }
+      return false;
     });
     expect(deleteButton.length).toBeGreaterThan(0);
     deleteButton[0].click();
-    const list = screen
-      .getAllByTestId("todo_list")
-      .map((item) => within(item).getByTestId("todo_content").textContent);
-    expect(list.findIndex((content) => content === todoValueWantToDelete)).toBe(
-      1
-    );
+    expect(
+      getTodolist().findIndex((content) => content === todoValueWantToDelete)
+    ).toBe(1);
   });
 });
